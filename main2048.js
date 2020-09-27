@@ -42,7 +42,7 @@ updateBoardView();
 
 function updateBoardView(){
 
-	//删除掉number-cell的值
+	//删除掉每个number-cell的值
 	$(".number-cell").remove();
 	for(var i = 0;i<4;i++)
 		for(var j=0;j<4;j++){
@@ -68,7 +68,7 @@ function updateBoardView(){
 				theNumberCell.css('top',getPosTop(i,j));
 				theNumberCell.css('left',getPosLeft(i,j));
 				theNumberCell.css('background-color',getNumberBackgroundColor(board[i][j]));//数字不同颜色不同
-				theNumberCell.css('color',getNumberColor(board[i][j]));//文字前景色
+				theNumberCell.css('color',getNumberColor(board[i][j]));//文字颜色
 				theNumberCell.text(board[i][j]);
 			}
 		}
@@ -219,4 +219,66 @@ function moveUp(){
 }
 	updateBoardView();
 	return true;
+}
+
+function moveRight(){
+	if(!canMoveRight(board)){
+		return false;
+	}
+
+	for(var i=0; i < 4;i++)
+		for(var j = 2;j >=0;j--){
+			if(board[i][j]!=0){
+				for(var k=3;k>j;k--)
+				if(board[i][k]==0&&noBlock(i,j,k,board)){
+					showMoveAnimation(i,j,i,k)
+					board[i][k]=board[i][j];
+					board[i][j]=0;
+
+					continue;
+
+				}
+				else if(board[i][k]==board[i][k]&&noBlock(i,j,k,board)){
+					showMoveAnimation(i,j,i,k);
+			         board[i][k]+=board[i][j];
+			         board[i][j]=0;
+
+			         continue;
+				}
+			}
+		}
+		updateBoardView();
+		return true;
+
+}
+
+
+function moveDown(){
+	if(!canMoveDown(board)){
+		return false;
+	}
+
+	for(var j=0;j<4;j++)
+		for(var i=2;i>=0;i--){
+			if(board[i][j]!=0){
+				for(var k=3;k>i;k--)
+					if(board[k][j]==0&&noBlock1(j,i,k,board)){
+						showMoveAnimation(i,j,k,j);
+						board[k][j]=board[i][j];
+						board[i][j]=0;
+
+						continue;
+					}
+					else if(board[k][j]==board[i][j]&&noBlock1(j,i,k,board)){
+						showMoveAnimation(i,j,k,j);
+						board[k][j]+=board[i][j];
+						board[i][j]=0;
+						continue;
+
+					}
+			}
+		}
+		updateBoardView();
+		return true;
+
 }
